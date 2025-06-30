@@ -2,9 +2,13 @@ import express from 'express';
 import fs from 'fs/promises';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { fileURLToPath } from 'url';
 
 const router = express.Router();
-const __dirname = path.resolve();
+
+// Handle __dirname in ES modules and CommonJS
+const __filename_resolved = typeof __dirname !== 'undefined' ? __filename : fileURLToPath(import.meta.url);
+const __dirname_resolved = typeof __dirname !== 'undefined' ? __dirname : path.dirname(__filename_resolved);
 
 interface LogEntry {
   id: string;
@@ -37,7 +41,7 @@ interface LogsQueryParams {
 // Helper function to read and parse log files
 const readLogFile = async (filename: string): Promise<LogEntry[]> => {
   try {
-    const logPath = path.join(__dirname, '../../logs', filename);
+    const logPath = path.join(__dirname_resolved, '../../logs', filename);
     const data = await fs.readFile(logPath, 'utf-8');
     const lines = data.trim().split('\n').filter(line => line.trim());
     
@@ -271,7 +275,3 @@ router.get('/stats', async (req, res) => {
 });
 
 export default router;
-
-// In your server.js, import like this:
-// import logsRouter from './routes/logs.js'
-// app.use('/api/logs', authenticateToken, logsRouter) // Add auth middleware

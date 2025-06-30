@@ -1,5 +1,10 @@
 import winston from 'winston';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Handle __dirname in ES modules and CommonJS
+const __filename = typeof __dirname !== 'undefined' ? __filename : fileURLToPath(import.meta.url);
+const __dirname_resolved = typeof __dirname !== 'undefined' ? __dirname : path.dirname(__filename);
 
 const logFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
@@ -15,14 +20,14 @@ const logger = winston.createLogger({
   transports: [
     // Write all logs with importance level of `error` or less to `error.log`
     new winston.transports.File({
-      filename: path.join(__dirname, '../../logs/error.log'),
+      filename: path.join(__dirname_resolved, '../../logs/error.log'),
       level: 'error',
       maxsize: 5242880, // 5MB
       maxFiles: 5,
     }),
     // Write all logs with importance level of `info` or less to `combined.log`
     new winston.transports.File({
-      filename: path.join(__dirname, '../../logs/combined.log'),
+      filename: path.join(__dirname_resolved, '../../logs/combined.log'),
       maxsize: 5242880, // 5MB
       maxFiles: 5,
     }),
