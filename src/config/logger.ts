@@ -3,8 +3,17 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 // Handle __dirname in ES modules and CommonJS
-const __filename = typeof __dirname !== 'undefined' ? __filename : fileURLToPath(import.meta.url);
-const __dirname_resolved = typeof __dirname !== 'undefined' ? __dirname : path.dirname(__filename);
+let currentDir: string;
+if (typeof __dirname !== 'undefined') {
+  // CommonJS environment
+  currentDir = __dirname;
+} else {
+  // ES Module environment
+  const __filename = fileURLToPath(import.meta.url);
+  currentDir = path.dirname(__filename);
+}
+
+const __dirname_resolved = currentDir;
 
 const logFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
