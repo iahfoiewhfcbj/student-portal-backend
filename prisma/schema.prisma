@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String?  @unique
+  rollNumber  String?  @unique
+  name        String
+  password    String
+  role        Role     @default(STUDENT)
+  brigadeId   String?
+  brigadeName String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  brigade           Brigade?     @relation(fields: [brigadeId], references: [id])
+  createdEvents     Event[]      @relation("EventCreator")
+  createdEventPlans EventPlan[]  @relation("EventPlanCreator")
+  submissions       Submission[]
+
+  @@map("users")
+}
+
+model Brigade {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  users User[]
+
+  @@map("brigades")
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  createdBy String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  creator    User        @relation("EventCreator", fields: [createdBy], references: [id])
+  eventPlans EventPlan[]
+
+  @@map("events")
+}
+
+model EventPlan {
+  id               String          @id @default(cuid())
+  title            String
+  description      String?
+  date             DateTime
+  time             String
+  endTime          String?
+  associatedEventId String
+  planType         PlanType        @default(withoutSubmission)
+  submissionType   SubmissionType?
+  fileSizeLimit    Int?            @default(5)
+  createdBy        String
+  isActive         Boolean         @default(true)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  // Relations
+  associatedEvent Event        @relation(fields: [associatedEventId], references: [id], onDelete: Cascade)
+  creator         User         @relation("EventPlanCreator", fields: [createdBy], references: [id])
+  submissions     Submission[]
+
+  @@map("event_plans")
+}
+
+model Submission {
+  id             String           @id @default(cuid())
+  studentId      String
+  eventPlanId    String
+  submissionType SubmissionType
+  content        String?
+  fileUrl        String?
+  fileName       String?
+  fileSize       Int?
+  status         SubmissionStatus @default(submitted)
+  submittedAt    DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  // Relations
+  student   User      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  eventPlan EventPlan @relation(fields: [eventPlanId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, eventPlanId])
+  @@map("submissions")
+}
+
+enum Role {
+  ADMIN
+  STUDENT
+}
+
+enum PlanType {
+  withSubmission
+  withoutSubmission
+}
+
+enum SubmissionType {
+  file
+  text
+  link
+}
+
+enum SubmissionStatus {
+  submitted
+  pending
+  late
+}
