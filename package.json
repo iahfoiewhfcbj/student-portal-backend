@@ -4,8 +4,8 @@
   "description": "Backend for Ignite Student Portal",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "nodemon src/server.ts",
-    "build": "tsc --skipLibCheck && tsc-alias",
+    "dev": "npm run db:generate && nodemon src/server.ts",
+    "build": "npm run db:generate && tsc --skipLibCheck && tsc-alias",
     "start": "node dist/server.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
