@@ -1,0 +1,49 @@
+{
+  service: 'ignite-backend',
+  timestamp: '2025-07-01 02:27:47',
+  message: 'Database Info: Starting a postgresql pool with 5 connections.',
+  target: 'quaint::pooled',
+  level: 'info'
+}
+{
+  message: '✅ Database connected successfully',
+  level: 'info',
+  service: 'ignite-backend',
+  timestamp: '2025-07-01 02:27:49'
+}
+{
+  message: '🚀 Server running on port 5000',
+  level: 'info',
+  service: 'ignite-backend',
+  timestamp: '2025-07-01 02:27:49'
+}
+{
+  message: '📊 Environment: production',
+  level: 'info',
+  service: 'ignite-backend',
+  timestamp: '2025-07-01 02:27:49'
+}
+{
+  message: '🔗 Health check: http://localhost:5000/health',
+  level: 'info',
+  service: 'ignite-backend',
+  timestamp: '2025-07-01 02:27:49'
+}
+{
+  message: 'Received SIGINT. Starting graceful shutdown...',
+  level: 'info',
+  service: 'ignite-backend',
+  timestamp: '2025-07-01 02:27:53'
+}
+{
+  message: 'HTTP server closed',
+  level: 'info',
+  service: 'ignite-backend',
+  timestamp: '2025-07-01 02:27:53'
+}
+{
+  message: 'Database disconnected successfully',
+  level: 'info',
+  service: 'ignite-backend',
+  timestamp: '2025-07-01 02:27:53'
+}

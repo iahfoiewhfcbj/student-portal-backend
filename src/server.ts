@@ -17,7 +17,6 @@ import eventRoutes from '@/routes/events';
 import eventPlanRoutes from '@/routes/eventPlans';
 import submissionRoutes from '@/routes/submissions';
 import analyticsRoutes from '@/routes/analytics';
-import logsRouter from './routes/logs.js'
 
 // Load environment variables
 dotenv.config();
@@ -43,7 +42,7 @@ app.use(limiter);
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.com'] 
+    ? ['https://studentportal.raguladhithya.in', '*'] 
     : ['http://localhost:3000', 'http://localhost:5173'],
   credentials: true,
 }));
@@ -84,7 +83,6 @@ app.use('/api/events', eventRoutes);
 app.use('/api/event-plans', eventPlanRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/analytics', analyticsRoutes);
-app.use('/api/logs', logsRouter)
 
 // 404 handler
 app.use('*', (req, res) => {
